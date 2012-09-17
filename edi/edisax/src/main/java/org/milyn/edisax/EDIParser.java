@@ -744,11 +744,16 @@ public class EDIParser implements XMLReader {
                 }
 
                 int numComponentsMissing = expectedComponents.size() - currentFieldComponents.length;
-                for (int i = expectedComponents.size() - 1; i > (expectedComponents.size() - numComponentsMissing - 1); i--)
-                {
-                    if (expectedComponents.get(i).isRequired()) {
-                        throwException = true;
-                        break;
+                if(numComponentsMissing < 0) {
+                    throwException = true;
+                }
+                else {
+                    for (int i = expectedComponents.size() - 1; i > (expectedComponents.size() - numComponentsMissing - 1); i--)
+                    {
+                        if (expectedComponents.get(i).isRequired()) {
+                            throwException = true;
+                            break;
+                        }
                     }
                 }
             } else {

@@ -202,6 +202,9 @@ public class EDIParserTest extends AbstractEDIParserTestCase {
          */
         testEDIParseException("error-subcomponent", "firstname", 1);
 
+        /**
+         * Test error in more components than expected when truncatable
+         */
+        testEDIParseException("error-multiple-trunc-component", "field-1", 1);
     }
-
 }
