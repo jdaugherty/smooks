@@ -89,7 +89,8 @@
                 <medi:component xmltag="referenceVersionNr" />
             </medi:field>
         </medi:segment>
-        
+
+        <medi:segmentGroup xmltag="party">
         <medi:segment segcode="NAD" xmltag="NAD">
             <medi:field xmltag="PartyQualifier" required="true"/>
             <medi:field xmltag="PARTY_IDENTIFICATION">
@@ -123,6 +124,7 @@
             <medi:field xmltag="PostCode" />
             <medi:field xmltag="CountryCode" />
         </medi:segment>
+        </medi:segmentGroup>
 
     </medi:segments>
 	

@@ -16,31 +16,20 @@
 
 package org.milyn.edisax.model;
 
+import org.milyn.assertion.AssertArgument;
+import org.milyn.edisax.EDIConfigurationException;
+import org.milyn.edisax.EDIParseException;
+import org.milyn.edisax.model.internal.*;
+import org.milyn.io.StreamUtils;
+import org.milyn.resource.URIResourceLocator;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.milyn.assertion.AssertArgument;
-import org.milyn.edisax.EDIConfigurationException;
-import org.milyn.edisax.EDIParseException;
-import org.milyn.edisax.model.internal.Component;
-import org.milyn.edisax.model.internal.Delimiters;
-import org.milyn.edisax.model.internal.Description;
-import org.milyn.edisax.model.internal.Edimap;
-import org.milyn.edisax.model.internal.Field;
-import org.milyn.edisax.model.internal.Import;
-import org.milyn.edisax.model.internal.Segment;
-import org.milyn.edisax.model.internal.SegmentGroup;
-import org.milyn.io.StreamUtils;
-import org.milyn.resource.URIResourceLocator;
-import org.xml.sax.SAXException;
+import java.util.*;
 
 /**                                          
  * EdifactModel contains all logic for handling imports for the
@@ -326,13 +315,22 @@ public class EdifactModel {
      * @return Map containing all segment in edimap.
      */
     private Map<String, Segment> createImportMap(Edimap edimap) {
-        HashMap<String, Segment> result = new HashMap<String, Segment>();
-        for (SegmentGroup segmentGroup : edimap.getSegments().getSegments()) {
+        Map<String, Segment> result = new HashMap<String, Segment>();
+        addImportedSegments(edimap.getSegments(), result);
+        return result;
+    }
+
+    private void addImportedSegments(SegmentGroup segmentGroupToAdd, Map<String, Segment> result)
+    {
+        for (SegmentGroup segmentGroup : segmentGroupToAdd.getSegments()) {
             if(segmentGroup instanceof Segment) {
-                result.put(((Segment)segmentGroup).getSegcode(), (Segment) segmentGroup);
+                result.put(segmentGroup.getSegcode(), (Segment) segmentGroup);
+            }
+            else
+            {
+                addImportedSegments(segmentGroup, result);
             }
         }
-        return result;
     }
 
     /**

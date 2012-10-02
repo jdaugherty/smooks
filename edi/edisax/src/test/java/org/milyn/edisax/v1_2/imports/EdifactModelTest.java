@@ -17,15 +17,15 @@
 package org.milyn.edisax.v1_2.imports;
 
 import junit.framework.TestCase;
+import org.milyn.edisax.EDIConfigurationException;
 import org.milyn.edisax.model.EdifactModel;
 import org.milyn.edisax.model.internal.Segment;
-import org.milyn.edisax.EDIConfigurationException;
 import org.milyn.io.StreamUtils;
 import org.xml.sax.SAXException;
 
-import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 /**
@@ -55,5 +55,11 @@ public class EdifactModelTest extends TestCase {
         EdifactModel ediModel = new EdifactModel(input);
 
         assertTrue("The truncatable attribute should have value [true] in Segment.", !((Segment)ediModel.getEdimap().getSegments().getSegments().get(0).getSegments().get(0)).isTruncatable());
-    }        
+    }
+
+    public void testImport_segmentsInGroups() throws IOException {
+        InputStream input = new ByteArrayInputStream(StreamUtils.readStream(getClass().getResourceAsStream("edi-config-grouped-segments.xml")));
+        EdifactModel ediModel = new EdifactModel(input);
+        assertTrue(ediModel.getEdimap().getSegments().getSegments().get(1).getSegcode().equals("NAD"));
+    }
 }
